@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EmbalaBox – Portal de Embalagens do Brasil</title>
+<meta name="description" content="Portal especializado em embalagens para food service, confeitaria e delivery. Notícias, regulamentação, tendências e produtos.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --g:#2A7A4B;--gl:#4ec18d;--gf:#eef8f2;--cream:#faf8f3;
+  --dark:#2e1e14;--txt:#444;--bdr:#e2ddd6;--lgray:#f5f4f0;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--txt);line-height:1.7;}
+a{text-decoration:none;color:inherit;}
+img{display:block;}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--g);color:#fff;font-size:12px;text-align:center;padding:7px 16px;letter-spacing:.03em;}
+.topbar a{color:#a8e6c6;font-weight:500;}
+
+/* ── HEADER — apenas logo + CTA, sem categorias duplicadas ── */
+header{background:#fff;border-bottom:2.5px solid var(--g);position:sticky;top:0;z-index:999;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+.hdr{max-width:1220px;margin:0 auto;padding:13px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.logo{font-family:'Playfair Display',serif;font-size:28px;font-weight:900;color:var(--g);letter-spacing:-1px;cursor:pointer;flex-shrink:0;}
+.logo em{color:var(--dark);font-style:normal;}
+.hdr-right{display:flex;gap:10px;align-items:center;}
+.hdr-search-wrap{position:relative;}
+.hdr-search{background:var(--lgray);border:1px solid var(--bdr);border-radius:4px;padding:7px 14px 7px 34px;font-size:12px;color:var(--txt);width:220px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .2s;}
+.hdr-search:focus{border-color:var(--g);background:#fff;}
+.hdr-search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px;pointer-events:none;color:#aaa;}
+.search-overlay{position:absolute;top:calc(100% + 6px);right:0;width:360px;background:#fff;border:1px solid var(--bdr);border-radius:5px;box-shadow:0 8px 28px rgba(0,0,0,.13);z-index:1000;max-height:420px;overflow-y:auto;display:none;}
+.search-overlay.show{display:block;}
+.search-item{display:flex;gap:10px;padding:12px 14px;border-bottom:1px solid var(--bdr);cursor:pointer;transition:background .15s;}
+.search-item:last-child{border-bottom:none;}
+.search-item:hover{background:var(--lgray);}
+.search-item img{width:52px;height:52px;border-radius:3px;object-fit:cover;flex-shrink:0;}
+.search-item-ttl{font-family:'Playfair Display',serif;font-size:13px;color:var(--dark);line-height:1.3;margin-bottom:3px;}
+.search-item-cat{font-size:10px;color:var(--g);font-weight:600;text-transform:uppercase;letter-spacing:.06em;}
+.search-empty{padding:20px;text-align:center;font-size:13px;color:#aaa;}
+.hdr-cta{background:var(--g);color:#fff;border-radius:4px;padding:8px 16px;font-size:12px;font-weight:600;white-space:nowrap;transition:background .2s;}
+.hdr-cta:hover{background:var(--dark);}
+
+/* ── CATEGORY BAR (única nav de categorias) ── */
+.catbar{background:var(--dark);}
+.catbar-inner{max-width:1220px;margin:0 auto;display:flex;overflow-x:auto;scrollbar-width:none;padding:0 20px;}
+.catbar-inner::-webkit-scrollbar{display:none;}
+.cat{background:none;border:none;border-bottom:3px solid transparent;padding:12px 18px;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:500;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.09em;white-space:nowrap;cursor:pointer;transition:all .2s;}
+.cat:hover,.cat.on{color:#fff;border-bottom-color:var(--gl);}
+
+/* ── HERO ── */
+#hero-zone{background:var(--dark);}
+.hero-wrap{max-width:1220px;margin:0 auto;display:grid;grid-template-columns:1fr 440px;min-height:430px;}
+.hero-txt{padding:54px 46px 54px 20px;display:flex;flex-direction:column;justify-content:center;}
+.hero-pill{display:inline-block;background:var(--gl);color:#fff;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;padding:4px 12px;border-radius:20px;margin-bottom:16px;width:fit-content;}
+.hero-h1{font-family:'Playfair Display',serif;font-size:clamp(22px,3.2vw,42px);font-weight:900;line-height:1.1;color:#fff;margin-bottom:14px;}
+.hero-lead{font-family:'Lora',serif;font-size:16px;color:rgba(255,255,255,.8);line-height:1.8;margin-bottom:22px;max-width:480px;}
+.hero-cta{display:inline-block;border:1.5px solid rgba(255,255,255,.35);color:#fff;padding:10px 24px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;border-radius:3px;cursor:pointer;background:none;font-family:'DM Sans',sans-serif;transition:all .2s;width:fit-content;}
+.hero-cta:hover{background:rgba(255,255,255,.12);}
+.hero-img{position:relative;overflow:hidden;background:#1a3d28;}
+.hero-img img{width:100%;height:100%;object-fit:cover;opacity:.55;}
+.hero-img::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,var(--dark) 0%,transparent 50%);}
+.hero-fb{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-size:120px;opacity:.12;}
+
+/* ── LAYOUT ── */
+.page{max-width:1220px;margin:0 auto;padding:44px 20px;display:grid;grid-template-columns:1fr 370px;gap:56px;align-items:start;}
+.sec-ttl{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--dark);border-bottom:2px solid var(--g);padding-bottom:9px;margin-bottom:26px;}
+
+/* ── CHIPS ── */
+.chip{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:3px 10px;border-radius:20px;margin-bottom:9px;}
+.chip-g{background:var(--gf);color:var(--g);border:1px solid #b6e0c8;}
+.chip-o{background:#fff5e8;color:#b05a00;border:1px solid #f0c07a;}
+.chip-b{background:#eaf1fb;color:#1a5fa5;border:1px solid #9ec4ef;}
+.chip-v{background:#f3eeff;color:#6a35c0;border:1px solid #c4a8f5;}
+.chip-r{background:#fdeaea;color:#b33030;border:1px solid #f0a0a0;}
+.chip-k{background:#fdf6e3;color:#7a5000;border:1px solid #e8c86a;}
+
+/* ── CARD GRANDE ── */
+.big-card{margin-bottom:34px;padding-bottom:34px;border-bottom:1px solid var(--bdr);}
+.big-card .thumb{width:100%;height:280px;border-radius:5px;overflow:hidden;position:relative;background:#d0ccc6;margin-bottom:18px;cursor:pointer;}
+.big-card .thumb img{width:100%;height:100%;object-fit:cover;transition:transform .5s;}
+.big-card .thumb:hover img{transform:scale(1.03);}
+.big-card .thumb .fb{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-size:80px;}
+.big-card h2{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;line-height:1.22;color:var(--dark);margin-bottom:9px;cursor:pointer;transition:color .2s;}
+.big-card h2:hover{color:var(--g);}
+.meta{font-size:11px;color:#aaa;display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:11px;}
+.meta .by{font-weight:600;color:#777;}
+.excerpt{font-family:'Lora',serif;font-size:15px;line-height:1.8;color:var(--txt);margin-bottom:13px;}
+.read-more{display:inline-flex;align-items:center;gap:5px;color:var(--g);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;transition:color .2s;padding:0;}
+.read-more:hover{color:var(--dark);}
+.read-more::after{content:' →';}
+
+/* ── GRID 2 COL ── */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-bottom:34px;}
+.med-card{background:#fff;border:1px solid var(--bdr);border-radius:5px;overflow:hidden;cursor:pointer;transition:box-shadow .2s,transform .2s;}
+.med-card:hover{box-shadow:0 6px 24px rgba(0,0,0,.1);transform:translateY(-2px);}
+.med-card .thumb{height:145px;overflow:hidden;position:relative;background:#d0ccc6;}
+.med-card .thumb img{width:100%;height:100%;object-fit:cover;transition:transform .5s;}
+.med-card:hover .thumb img{transform:scale(1.06);}
+.med-card .thumb .fb{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-size:46px;}
+.med-card .bd{padding:15px;}
+.med-card h3{font-family:'Playfair Display',serif;font-size:15px;line-height:1.3;color:var(--dark);margin-bottom:6px;}
+.med-card p{font-size:12px;color:#888;font-family:'Lora',serif;font-style:italic;line-height:1.55;margin-bottom:7px;}
+
+/* ── LISTA HORIZONTAL ── */
+.hz-list .hz-item{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--bdr);cursor:pointer;transition:background .15s;border-radius:3px;}
+.hz-item:last-child{border-bottom:none;}
+.hz-item:hover{background:var(--lgray);margin:0 -8px;padding:16px 8px;}
+.hz-item .thumb{width:96px;height:76px;flex-shrink:0;border-radius:4px;overflow:hidden;position:relative;background:#d0ccc6;}
+.hz-item .thumb img{width:100%;height:100%;object-fit:cover;}
+.hz-item .thumb .fb{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-size:28px;}
+.hz-item .inf h3{font-family:'Playfair Display',serif;font-size:15px;line-height:1.3;color:var(--dark);margin-bottom:4px;}
+.hz-item .inf p{font-size:12px;color:#888;font-family:'Lora',serif;font-style:italic;margin-bottom:3px;}
+
+/* ── ARTIGO FULL ── */
+.art-cover{width:100%;height:380px;border-radius:5px;overflow:hidden;position:relative;background:#d0ccc6;margin-bottom:24px;}
+.art-cover img{width:100%;height:100%;object-fit:cover;}
+.art-cover .fb{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-size:110px;}
+.art-h1{font-family:'Playfair Display',serif;font-size:clamp(24px,3.5vw,40px);font-weight:900;line-height:1.12;color:var(--dark);margin-bottom:13px;}
+.art-body{font-family:'Lora',serif;font-size:16.5px;line-height:1.92;color:var(--txt);}
+.art-body p{margin-bottom:18px;}
+.art-body h2{font-family:'Playfair Display',serif;font-size:23px;color:var(--dark);margin:32px 0 13px;font-weight:700;}
+.art-body h3{font-family:'Playfair Display',serif;font-size:19px;color:var(--dark);margin:24px 0 11px;font-weight:700;}
+.art-body ul,.art-body ol{padding-left:22px;margin-bottom:18px;}
+.art-body li{margin-bottom:7px;}
+.art-body strong{color:var(--dark);font-weight:600;}
+.art-body blockquote{border-left:4px solid var(--g);padding:14px 22px;margin:26px 0;background:var(--gf);border-radius:0 5px 5px 0;}
+.art-body blockquote p{color:var(--g)!important;font-style:italic;margin:0!important;font-size:17px;}
+
+/* imagem dentro do artigo */
+.art-body .in-img{width:100%;height:300px;border-radius:5px;overflow:hidden;position:relative;background:#d0ccc6;margin:26px 0 6px;}
+.art-body .in-img img{width:100%;height:100%;object-fit:cover;}
+.art-body .in-img .fb{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-size:70px;}
+.art-body .caption{font-family:'DM Sans',sans-serif;font-size:11px;color:#aaa;text-align:center;margin-bottom:20px;font-style:italic;}
+
+/* imagem de referência de marca (contém produto) */
+.art-body .ref-img{width:100%;height:240px;border-radius:5px;overflow:hidden;position:relative;background:#f0ede8;margin:20px 0 6px;border:1px solid var(--bdr);}
+.art-body .ref-img img{width:100%;height:100%;object-fit:contain;padding:12px;}
+.art-body .ref-img .fb{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-size:60px;}
+.art-body .ref-label{font-family:'DM Sans',sans-serif;font-size:10px;color:#bbb;text-align:center;margin-bottom:18px;text-transform:uppercase;letter-spacing:.08em;}
+
+/* ── BOX PRODUTO ALTERPEL ── */
+.prod-box{background:var(--gf);border-left:3px solid var(--g);padding:20px 22px;margin:26px 0;border-radius:0 5px 5px 0;}
+.prod-box .pb-label{font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--g);font-weight:700;margin-bottom:9px;font-family:'DM Sans',sans-serif;}
+.prod-box h4{font-family:'Playfair Display',serif;font-size:18px;color:var(--dark);margin-bottom:8px;}
+.prod-box .pb-img{width:100%;height:180px;border-radius:4px;overflow:hidden;margin-bottom:13px;background:#fff;display:flex;align-items:center;justify-content:center;border:1px solid var(--bdr);}
+.prod-box .pb-img img{max-width:100%;max-height:100%;object-fit:contain;padding:10px;}
+.prod-box p{font-size:14px;color:var(--txt);margin-bottom:13px;line-height:1.6;font-family:'DM Sans',sans-serif;}
+.prod-box a{display:inline-block;background:var(--g);color:#fff;font-size:12px;font-weight:700;padding:9px 20px;border-radius:4px;text-transform:uppercase;letter-spacing:.06em;transition:background .2s;}
+.prod-box a:hover{background:var(--dark);}
+
+/* ── BTN VOLTAR ── */
+.back-btn{display:inline-flex;align-items:center;gap:6px;color:var(--g);font-size:12px;font-weight:600;cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif;padding:0 0 20px;text-transform:uppercase;letter-spacing:.06em;transition:color .2s;}
+.back-btn::before{content:'←';font-size:14px;}
+.back-btn:hover{color:var(--dark);}
+.divider{height:1px;background:var(--bdr);margin:34px 0;}
+
+/* ── SIDEBAR (sem sticky — rola normalmente) ── */
+.sb-w{background:#fff;border:1px solid var(--bdr);border-radius:5px;overflow:hidden;margin-bottom:22px;}
+.sb-head{background:var(--dark);color:#fff;padding:11px 16px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;}
+.sb-body{padding:15px;}
+
+.alt-banner{background:var(--g);border-radius:5px;padding:22px 16px;text-align:center;margin-bottom:22px;}
+.alt-logo-sb{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:#fff;margin-bottom:2px;}
+.alt-logo-sb span{color:#a8e6c6;}
+.alt-sub{font-size:12px;color:rgba(255,255,255,.8);line-height:1.6;margin-bottom:4px;}
+.alt-badge{font-size:11px;color:#a8e6c6;font-weight:600;margin-bottom:16px;}
+.alt-links{display:flex;flex-direction:column;gap:7px;margin-bottom:14px;}
+.alt-links a{background:#fff;color:var(--g);font-size:12px;font-weight:600;padding:9px 12px;border-radius:4px;display:flex;align-items:center;gap:7px;transition:all .2s;}
+.alt-links a:hover{background:var(--dark);color:#fff;}
+.alt-tel{font-size:11px;color:rgba(255,255,255,.6);}
+.alt-tel a{color:#a8e6c6;font-weight:500;}
+
+.sb-rec{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--bdr);cursor:pointer;}
+.sb-rec:last-child{border-bottom:none;padding-bottom:0;}
+.sb-rec:hover .sb-rec-ttl{color:var(--g);}
+.sb-rec-img{width:58px;height:58px;border-radius:4px;flex-shrink:0;overflow:hidden;position:relative;background:#eee;}
+.sb-rec-img img{width:100%;height:100%;object-fit:cover;}
+.sb-rec-img .fb{position:absolute;inset:0;display:none;align-items:center;justify-content:center;font-size:20px;}
+.sb-rec-ttl{font-family:'Playfair Display',serif;font-size:13px;line-height:1.3;color:var(--dark);margin-bottom:3px;transition:color .2s;}
+.sb-rec-dt{font-size:10px;color:#bbb;}
+
+.sb-prod{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--bdr);}
+.sb-prod:last-child{border-bottom:none;padding-bottom:0;}
+.sb-prod-img{width:50px;height:50px;border-radius:4px;flex-shrink:0;overflow:hidden;background:#f8f7f3;border:1px solid var(--bdr);}
+.sb-prod-img img{width:100%;height:100%;object-fit:contain;padding:3px;}
+.sb-prod-name{font-size:12px;color:var(--dark);font-weight:500;line-height:1.3;margin-bottom:2px;}
+.sb-prod-price{font-size:13px;color:var(--g);font-weight:700;}
+.sb-prod a{font-size:10px;color:var(--g);text-transform:uppercase;letter-spacing:.04em;font-weight:600;display:block;margin-top:2px;}
+.sb-prod a:hover{text-decoration:underline;}
+
+.tags-wrap{display:flex;flex-wrap:wrap;gap:6px;}
+.tag{background:none;border:1px solid var(--bdr);color:var(--txt);font-size:11px;padding:5px 11px;border-radius:20px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .2s;}
+.tag:hover{background:var(--g);color:#fff;border-color:var(--g);}
+
+/* ── FOOTER ── */
+footer{background:var(--dark);color:rgba(255,255,255,.65);padding:48px 20px 24px;margin-top:50px;}
+.ft-inner{max-width:1220px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:36px;margin-bottom:34px;}
+.ft-logo{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;color:#fff;display:block;margin-bottom:12px;}
+.ft-logo em{color:#a8e6c6;font-style:normal;}
+.ft-col h5{color:#fff;font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;font-weight:600;}
+.ft-col a,.ft-col span{display:block;color:rgba(255,255,255,.55);font-size:12px;margin-bottom:7px;transition:color .2s;cursor:pointer;}
+.ft-col a:hover{color:#a8e6c6;}
+.ft-bot{max-width:1220px;margin:0 auto;border-top:1px solid rgba(255,255,255,.1);padding-top:18px;display:flex;justify-content:space-between;font-size:11px;color:rgba(255,255,255,.35);}
+
+@media(max-width:980px){
+  .hero-wrap,.page{grid-template-columns:1fr;}
+  .hero-img{display:none;}
+  .hero-txt{padding:40px 20px;}
+  .grid2{grid-template-columns:1fr;}
+  .ft-inner{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:600px){
+  .hdr-search{display:none;}
+  .ft-inner{grid-template-columns:1fr;}
+  .ft-bot{flex-direction:column;gap:6px;text-align:center;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  📦 Portal especializado em embalagens para food service, confeitaria e delivery &nbsp;|&nbsp;
+  <a href="https://www.alterpel.com.br" target="_blank">Comprar na Alterpel — Frete Grátis para SP →</a>
+</div>
+
+<header>
+  <div class="hdr">
+    <div class="logo" onclick="goHome()">Embala<em>Box</em></div>
+    <div class="hdr-right">
+      <div class="hdr-search-wrap">
+        <span class="hdr-search-icon">🔍</span>
+        <input class="hdr-search" id="searchInput" type="text" placeholder="Buscar no portal…"
+          oninput="doSearch(this.value)"
+          onblur="setTimeout(()=>document.getElementById('searchResults').classList.remove('show'),200)"
+          onfocus="if(this.value.trim())document.getElementById('searchResults').classList.add('show')">
+        <div class="search-overlay" id="searchResults"></div>
+      </div>
+      <a class="hdr-cta" href="https://www.alterpel.com.br" target="_blank">🛒 Loja Alterpel</a>
+    </div>
+  </div>
+</header>
+
+<!-- ÚNICA BARRA DE CATEGORIAS -->
+<div class="catbar">
+  <div class="catbar-inner" id="catbar">
+    <button class="cat on"  data-cat="todos"          onclick="filterCat('todos',this)">🏠 Todos</button>
+    <button class="cat"     data-cat="tendencias"      onclick="filterCat('tendencias',this)">Tendências</button>
+    <button class="cat"     data-cat="confeitaria"     onclick="filterCat('confeitaria',this)">Confeitaria</button>
+    <button class="cat"     data-cat="delivery"        onclick="filterCat('delivery',this)">Delivery</button>
+    <button class="cat"     data-cat="oriental"        onclick="filterCat('oriental',this)">Sushi &amp; Oriental</button>
+    <button class="cat"     data-cat="hamburguer"      onclick="filterCat('hamburguer',this)">Hamburguerias</button>
+    <button class="cat"     data-cat="sustentabilidade" onclick="filterCat('sustentabilidade',this)">Sustentabilidade</button>
+    <button class="cat"     data-cat="regulamentacao"  onclick="filterCat('regulamentacao',this)">Regulamentação</button>
+    <button class="cat"     data-cat="mercado"         onclick="filterCat('mercado',this)">Mercado</button>
+    <button class="cat"     data-cat="ecommerce"       onclick="filterCat('ecommerce',this)">E-commerce</button>
+    <button class="cat"     data-cat="pizza"           onclick="filterCat('pizza',this)">Pizzas</button>
+  </div>
+</div>
+
+<div id="hero-zone"></div>
+<div class="page">
+  <main id="main"></main>
+  <aside id="sidebar"></aside>
+</div>
+
+<footer>
+  <div class="ft-inner">
+    <div>
+      <span class="ft-logo">Embala<em>Box</em></span>
+      <p style="font-size:13px;line-height:1.8">Portal de conteúdo especializado em embalagens para food service, confeitaria e delivery no Brasil.</p>
+      <br><p style="font-size:11px;color:rgba(255,255,255,.35)">Parceiro comercial: <a href="https://www.alterpel.com.br" target="_blank" style="color:#a8e6c6">Alterpel — Indústria de Embalagens · Sorocaba-SP</a></p>
+    </div>
+    <div class="ft-col">
+      <h5>Seções</h5>
+      <span onclick="filterCat('tendencias',null)">Tendências</span>
+      <span onclick="filterCat('delivery',null)">Delivery</span>
+      <span onclick="filterCat('confeitaria',null)">Confeitaria</span>
+      <span onclick="filterCat('sustentabilidade',null)">Sustentabilidade</span>
+      <span onclick="filterCat('regulamentacao',null)">Regulamentação</span>
+      <span onclick="filterCat('ecommerce',null)">E-commerce</span>
+    </div>
+    <div class="ft-col">
+      <h5>Alterpel</h5>
+      <a href="https://www.alterpel.com.br" target="_blank">Loja Virtual</a>
+      <a href="https://www.alterpel.com.br/embalagens-culinaria-oriental-caixa-comida-japonesa-sushi-delivery" target="_blank">Culinária Oriental</a>
+      <a href="https://www.alterpel.com.br/embalagem-caixa-bolos" target="_blank">Bolos</a>
+      <a href="https://www.alterpel.com.br/embalagens-para-hamburgueria-delivery" target="_blank">Hamburguerias</a>
+      <a href="https://www.alterpel.com.br/caixa-embalagem-doces-confeitaria-brigadeiro" target="_blank">Doces</a>
+    </div>
+    <div class="ft-col">
+      <h5>Redes</h5>
+      <a href="https://wa.me/5515998100075" target="_blank">📱 WhatsApp</a>
+      <a href="https://www.instagram.com/alterpel.embalagens" target="_blank">Instagram</a>
+      <a href="https://www.facebook.com/alterpel" target="_blank">Facebook</a>
+    </div>
+  </div>
+  <div class="ft-bot">
+    <span>© 2025 EmbalaBox — Portal de Embalagens do Brasil</span>
+    <span>Conteúdo editorial com parceria comercial Alterpel</span>
+  </div>
+</footer>
+
+<script>
+/* ================================================================
+   ARTIGOS — imagens HD (w=1200) + produtos Alterpel corretos
+   ================================================================ */
+const DB = [
+
+  /* 1 ── KRAFT ─────────────────────────────────────────────── */
+  {
+    id:'kraft', cat:'tendencias', catLabel:'Tendências', chip:'chip-k',
+    title:'Embalagem kraft: de tendência a padrão consolidado no food service',
+    date:'12 mai. 2026', author:'Redação EmbalaBox', read:'8 min',
+    excerpt:'O kraft deixou de ser novidade e virou o padrão estético do food service artesanal brasileiro. Em 2026, quem ainda usa isopor é que está fora do padrão — não quem usa papel.',
+    img:'https://images.pexels.com/photos/8015700/pexels-photo-8015700.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=1260&h=520&dpr=1',
+    fb:'📦', fbBg:'#f0e6d3',
+    thumb:'https://images.pexels.com/photos/8015700/pexels-photo-8015700.jpeg?auto=compress&cs=tinysrgb&fit=crop&w=400&h=280&dpr=1',
+    body:`
+<p>Em 2026, falar que "vai adotar embalagem kraft" não é mais diferencial — é praticamente o mínimo esperado. O papel kraft consolidou-se como padrão estético do food service artesanal brasileiro, presente em hamburguerias, confeitarias, restaurantes orientais e food trucks de norte a sul do país.</p>
+<p>Segundo pesquisa da <strong>Galunion em parceria com a ABF (Associação Brasileira de Franchising)</strong>, publicada em dezembro de 2025, <strong>71% dos consumidores brasileiros priorizam marcas com práticas ambientais claras</strong> — como uso de embalagens biodegradáveis e redução de desperdício. O kraft, naturalmente reciclável e com apelo visual artesanal, atende a esse critério melhor do que qualquer outra embalagem de custo equivalente.</p>
+<blockquote><p>"O uso de embalagens retornáveis, a redução de perdas e o aproveitamento criativo de alimentos são estratégias viáveis. Trabalhar com produtos sazonais também ajuda a alinhar operação e impacto ambiental." — Thiago Lupatini, Food Club, CartaCapital 2026</p></blockquote>
+<h3>McDonald's, Burger King: as grandes redes que já mudaram</h3>
+<p>A migração para papel não é privilégio das pequenas marcas artesanais. O <strong>McDonald's Brasil foi o primeiro restaurante da rede no mundo a atingir 100% de embalagens com certificação FSC</strong> (Forest Stewardship Council) — seis anos antes da meta global estabelecida pela empresa. Todas as embalagens de papel dos restaurantes McDonald's no Brasil carregam o selo FSC, que certifica manejo florestal responsável. Além disso, a Arcos Dorados (franquia que opera o McDonald's na América Latina) <strong>já reduziu 40% do plástico</strong> de suas lojas.</p>
+<p>O <strong>Burger King Brasil</strong> também eliminou as caixas de papelão dos combos infantis e passou a usar papel nos sanduíches. A BK Brasil, que também opera o Popeyes, tem meta de reduzir 30% das emissões de gases de efeito estufa até 2030.</p>
+<div style="width:75%;margin:26px auto 6px;border-radius:5px;overflow:hidden;line-height:0;">
+  <img src="https://images.pexels.com/photos/29914027/pexels-photo-29914027.jpeg?auto=compress&cs=tinysrgb&w=1260&dpr=1" alt="Sacolas de papel kraft" style="width:100%;height:auto;display:block;border-radius:5px;" onerror="this.parentNode.style.background='#e8d8c0';this.parentNode.style.height='200px';">
+</div>
+<p class="caption">Embalagens de papel kraft — estética natural que transmite autenticidade e responsabilidade ambiental</p>
+<h3>O impacto das tarifas Trump no mercado de embalagens</h3>
+<p>Em julho de 2025, o governo Trump anunciou uma <strong>tarifa de 50% sobre todas as importações brasileiras</strong> a partir de agosto de 2025. Para o setor de embalagens, o efeito foi indireto mas real: equipamentos e insumos importados para fabricação ficaram mais caros, o dólar valorizou-se e os custos operacionais subiram. O resultado prático foi uma pressão ainda maior por embalagens produzidas no Brasil, com matéria-prima nacional — exatamente o caso do papel kraft fabricado localmente.</p>
+<p>Fabricantes nacionais como a Alterpel, que produzem em território brasileiro com insumos nacionais, saíram relativamente mais competitivos desse cenário: sem dependência de importações, sem exposição direta às tarifas.</p>
+<div style="width:75%;margin:20px auto 6px;border-radius:5px;overflow:hidden;line-height:0;border:1px solid var(--bdr);">
+  <img src="https://images.pexels.com/photos/29914090/pexels-photo-29914090.jpeg?auto=compress&cs=tinysrgb&w=1260&dpr=1" alt="Sacola de papel kraft" style="width:100%;height:auto;display:block;border-radius:5px;" onerror="this.parentNode.style.background='#e8d8c0';this.parentNode.style.height='200px';">
+</div>
+<p class="ref-label">Embalagem kraft — escolha consolidada de grandes e pequenas marcas em 2026</p>
+<div class="prod-box">
+  <div class="pb-label">🏷 Catálogo Alterpel — Linha Kraft Completa</div>
+  <h4>Caixas de Papel Kraft — Todos os Modelos e Tamanhos</h4>
+  <div class="pb-img"><img src="https://cdn.awsli.com.br/1920x1920/671/671521/produto/213028121/site--6--pys62me6l9.png" alt="Linha kraft Alterpel" onerror="this.style.display='none'" style="object-fit:contain;padding:8px;"></div>
+  <p>Explore o catálogo completo de embalagens kraft da Alterpel: caixas multiuso, modelos com visor, impermeabilizadas para alimentos, em papelão ondulado e papel cartão. Vários tamanhos. Preço de fábrica, frete grátis para SP.</p>
+  <a href="https://www.alterpel.com.br/buscar?q=kraft" target="_blank">Ver todos os produtos kraft →</a>
+</div>`
+  },
+
+  /* 2 ── RDC 843 ─────────────────────────────────────────────── */
+  {
+    id:'rdc843', cat:'regulamentacao', catLabel:'Regulamentação', chip:'chip-v',
+    title:'RDC 843/2024 e Reforma Tributária: o novo ambiente regulatório das embalagens',
+    date:'5 mai. 2026', author:'Editoria Jurídica EmbalaBox', read:'7 min',
+    excerpt:'A RDC 843 completou seu primeiro ano em vigor em setembro de 2025. Agora, em 2026, a Reforma Tributária (IBS/CBS) adiciona uma nova camada de mudanças para quem usa embalagens no food service.',
+    img:'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1200&q=90',
+    fb:'⚖️', fbBg:'#1a3a6e',
+    thumb:'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=300&q=80',
+    body:`
+<p>O ambiente regulatório para embalagens no food service nunca foi tão movimentado quanto em 2025-2026. A <strong>RDC 843/2024 da ANVISA</strong>, em vigor desde 1º de setembro de 2024, já completou um ano de implementação — e agora a <strong>Reforma Tributária</strong> adiciona uma nova dimensão de mudanças para quem opera no setor.</p>
+<h3>RDC 843/2024: o que mudou na prática</h3>
+<p>A resolução consolidou toda a regulamentação de alimentos e embalagens em um único documento, revogando normas esparsas antigas. Uma das boas notícias que se confirmou na prática: <strong>embalagens em geral estão dispensadas de registro na Anvisa</strong>. Fabricantes precisam apenas estar licenciados junto ao órgão de vigilância sanitária local.</p>
+<p>O prazo de adequação para empresas que precisavam realizar notificação sanitária foi 1º de setembro de 2025 — já encerrado. Empresas que não se adequaram estão sujeitas a autuações pelos órgãos de vigilância estaduais e municipais.</p>
+<blockquote><p>"A RDC 843/2024 moderniza a regulamentação existente, garantindo segurança alimentar com padrões alinhados às normas internacionais. Quem já trabalhava com embalagens de qualidade certificada não teve dificuldades de adequação."</p></blockquote>
+<div class="in-img">
+  <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1200&q=90" alt="Regulamentação embalagens alimentícias" onerror="this.style.display='none';this.parentNode.querySelector('.fb').style.display='flex'">
+  <div class="fb" style="background:linear-gradient(135deg,#1a3a6e,#0d2240)">⚖️</div>
+</div>
+<p class="caption">Novo ambiente regulatório exige mais transparência, rastreabilidade e conformidade sanitária</p>
+<h3>Reforma Tributária: embalagens entram no crédito amplo</h3>
+<p>Em 2026, a <strong>Reforma Tributária (IBS/CBS)</strong> já opera com alíquotas simbólicas de teste, mas seu impacto futuro é relevante para o food service. O novo sistema substitui PIS, Cofins, IPI, ICMS e ISS pelos novos CBS (federal) e IBS (estadual/municipal) e introduz o conceito de <strong>crédito amplo</strong>: restaurantes, hamburguerias e confeitarias poderão abater o imposto pago não apenas nos ingredientes, mas também nas <strong>embalagens e materiais de consumo</strong>.</p>
+<p>Segundo análise da Digi Office (jan/2026), isso "favorece drasticamente o estabelecimento que opera na total formalidade" — ou seja, quem compra embalagens de fabricantes com nota fiscal e CNPJ regularizado sai ganhando no novo sistema.</p>
+<h3>Tarifas Trump e o impacto no custo de embalagens</h3>
+<p>A tarifa de 50% anunciada pelo governo Trump sobre importações brasileiras (agosto de 2025) gerou desvalorização do Real e pressão de custo nos insumos importados. Para o setor de embalagens, o efeito foi de alta nos custos de equipamentos e matérias-primas importadas — reforçando ainda mais a vantagem competitiva das embalagens produzidas integralmente no Brasil.</p>
+<div class="prod-box">
+  <div class="pb-label">✅ Conformidade — Alterpel</div>
+  <h4>Embalagens com Nota Fiscal — Fábrica Regularizada</h4>
+  <div class="pb-img"><img src="https://cdn.awsli.com.br/300x300/671/671521/produto/271511469/embalagem-hamburguer--4--fmu6ie3s6e.jpg" alt="Embalagem hambúrguer certificada" onerror="this.style.display='none'"></div>
+  <p>A Alterpel é fabricante regularizada (CNPJ: 02.125.822/0001-24), emite nota fiscal em todas as vendas e produz embalagens dentro das exigências da legislação sanitária brasileira — fundamental para aproveitar os créditos tributários da Reforma.</p>
+  <a href="https://www.alterpel.com.br" target="_blank">Conhecer a Alterpel →</a>
+</div>`
+  },
+
+  /* 3 ── DELIVERY 2026 ───────────────────────────────────────── */
+  {
+    id:'delivery-mercado', cat:'delivery', catLabel:'Delivery', chip:'chip-b',
+    title:'Delivery supera US$ 23 bilhões: Keeta, Meituan e a nova guerra dos apps no Brasil',
+    date:'28 abr. 2026', author:'Editoria de Mercado', read:'6 min',
+    excerpt:'O mercado brasileiro de delivery ultrapassa US$ 23 bilhões em 2026 com a chegada da Keeta/Meituan e o retorno da 99Food. Mais competição significa mais pressão por embalagens que façam a diferença.',
+    img:'https://images.unsplash.com/photo-1526367790999-0150786686a2?auto=format&fit=crop&w=1200&q=90',
+    fb:'🚴', fbBg:'#0d3d6e',
+    thumb:'https://images.unsplash.com/photo-1526367790999-0150786686a2?auto=format&fit=crop&w=300&q=80',
+    body:`
+<p>O mercado brasileiro de delivery de comida <strong>deve ultrapassar US$ 23 bilhões em 2026</strong>, segundo projeções da Agilizone (dez/2025). Para efeito de comparação, em 2023 o setor movimentou cerca de R$ 139 bilhões — crescimento de mais de 50% em relação a 2019 (Abrasel/Euromonitor). O que mudou em 2026, porém, não é só o tamanho do mercado: é a estrutura competitiva.</p>
+<h3>A guerra dos apps em 2026</h3>
+<p>O iFood mantém a liderança com mais de 55 milhões de usuários ativos e domínio de 80%+ dos pedidos no Brasil. Mas 2025 marcou uma virada: a <strong>Keeta (Meituan)</strong>, gigante chinesa de delivery, entrou agressivamente no mercado brasileiro com tecnologia avançada e subsídios para fidelizar usuários. A <strong>99Food voltou</strong>. E o impacto da Meituan trouxe pressão constante sobre o iFood para inovar em preços, logística e experiência.</p>
+<blockquote><p>"O mercado de 2026 não perdoa o amadorismo. A diferença agora não é mais só preço — é tecnologia, consistência e experiência do cliente." — Mundo Food Service, mar/2026</p></blockquote>
+<div class="in-img">
+  <img src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=1200&q=90" alt="Delivery de comida Brasil 2026" onerror="this.style.display='none';this.parentNode.querySelector('.fb').style.display='flex'">
+  <div class="fb" style="background:linear-gradient(135deg,#0d3d6e,#071e36)">🛵</div>
+</div>
+<p class="caption">Em 2026, o delivery virou ecossistema avançado: mais competitivo, mais tecnológico e com consumidor mais exigente</p>
+<h3>O que a guerra dos apps significa para as embalagens</h3>
+<p>Mais concorrência entre apps significa mais poder nas mãos dos consumidores — e mais exigência sobre a experiência de recebimento do pedido. Pesquisa da Ticket mostra que <strong>40% dos brasileiros usam delivery</strong>, com 11% fazendo pedidos uma a duas vezes por semana. Nesse cenário, a embalagem que chega amassada, vazando ou com aparência descuidada resulta diretamente em avaliação negativa — e avaliação negativa afeta o posicionamento no ranking do app.</p>
+<p>As <strong>dark kitchens</strong> — cozinhas que operam só para delivery — estão em nova fase em 2026: modelos híbridos com múltiplas marcas sob a mesma operação, micro-hubs de preparo ultra-rápido e cardápios criados com base em dados. Nesse modelo, a embalagem precisa estar pronta para uso imediato, sem montagem, sem perda de tempo.</p>
+<h3>Delivery de experiência: a nova aposta do setor</h3>
+<p>Segundo o relatório da Skymsen sobre tendências 2026, "mais negócios estão investindo em <strong>delivery de experiência</strong>, com embalagens térmicas inovadoras, apresentações cuidadas e cardápios pensados exclusivamente para viagem. A regra é clara: o sabor precisa chegar igual ao do salão." Essa tendência valoriza diretamente embalagens que preservam temperatura, vedação e apresentação.</p>
+<div class="prod-box">
+  <div class="pb-label">🏷 Solução para delivery — Alterpel</div>
+  <h4>Box Impermeável para Massas e Pratos com Molho</h4>
+  <div class="pb-img"><img src="https://cdn.awsli.com.br/300x300/671/671521/produto/234084355/chef-robson-fgkd48sjwb.png" alt="Box massas antivazamento" onerror="this.style.display='none'"></div>
+  <p>Embalagem box antivazamento, impermeabilizada internamente. Pacote com 50 unidades. Ideal para yakisoba, massas e pratos com molho. Frete grátis para SP.</p>
+  <a href="https://www.alterpel.com.br/box-embalagem-para-macarrao-antivazamento-caixa-impermeavel-massas" target="_blank">Ver produto →</a>
+</div>`
+  },
+
+  /* 4 ── GRANDES MARCAS ─────────────────────────────────────── */
+  {
+    id:'grandes-marcas', cat:'sustentabilidade', catLabel:'Sustentabilidade', chip:'chip-v',
+    title:'McDonald\'s, Burger King e Cacau Show: como as grandes marcas estão embalando em 2026',
+    date:'20 abr. 2026', author:'Agência EmbalaBox', read:'6 min',
+    excerpt:'O McDonald\'s foi o primeiro no mundo a ter 100% das embalagens com certificação FSC. O BK eliminou caixas de papelão. O Cacau Show usa embalagem como parte do produto. O que essas marcas ensinam ao food service independente?',
+    img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=90',
+    fb:'🌱', fbBg:'#1a4020',
+    thumb:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=300&q=80',
+    body:`
+<p>Quando as maiores redes de alimentação do mundo mudam suas embalagens, o mercado inteiro segue. Em 2026, a migração do plástico para o papel já não é tendência — é realidade consolidada nas grandes marcas. E o que elas fizeram serve de manual para qualquer hamburguerira, confeitaria ou restaurante independente que queira se posicionar à frente.</p>
+<h3>McDonald's: 100% FSC, antes do prazo</h3>
+<p>O <strong>McDonald's Brasil</strong> foi o <strong>primeiro restaurante da rede no mundo</strong> a atingir 100% de embalagens de papel com certificação FSC® (Forest Stewardship Council®) — conquistando esse objetivo seis anos antes da meta global estabelecida pela empresa. O selo FSC certifica que toda a cadeia de produção das embalagens realiza manejo florestal responsável do ponto de vista econômico, social e ambiental.</p>
+<p>Além disso, a Arcos Dorados (franquia do McDonald's na América Latina) já <strong>reduziu 40% do plástico</strong> de suas lojas. Canudos de plástico foram substituídos por papel, tampas de sorvete McFlurry eliminadas, colheres de plástico trocadas por madeira. A meta global: 100% das embalagens recicladas e de materiais renováveis.</p>
+<div class="in-img">
+  <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1200&q=90" alt="Hambúrguer embalagem premium food service" onerror="this.style.display='none';this.parentNode.querySelector('.fb').style.display='flex'">
+  <div class="fb" style="background:linear-gradient(135deg,#7a1e1e,#4a1010)">🍔</div>
+</div>
+<p class="caption">Do fast-food ao artesanal: a embalagem de papel virou padrão no segmento de hambúrgueres</p>
+<h3>Burger King: papel nos sanduíches, fim das caixas infantis</h3>
+<p>A <strong>BK Brasil</strong> (que também opera o Popeyes) eliminou as caixas de papelão dos combos infantis e passou a usar papel diretamente nos sanduíches. Com meta de reduzir <strong>30% das emissões de gases de efeito estufa até 2030</strong>, a rede investe em embalagens mais leves e recicláveis como parte da estratégia de ESG.</p>
+<h3>Cacau Show: a embalagem como parte do produto</h3>
+<p>No segmento de chocolates e confeitaria, o <strong>Cacau Show</strong> é a referência nacional de como usar a embalagem como extensão do produto. Caixas de papel rígido, acabamentos texturizados e apresentação premium transformam chocolates em itens de presente com alto valor percebido. A lição: a embalagem não embala o produto — ela <em>é</em> parte do produto e do argumento de preço.</p>
+<blockquote><p>"71% dos consumidores brasileiros priorizam marcas com práticas ambientais claras, como embalagens biodegradáveis e redução de desperdício." — Galunion/ABF, dez/2025</p></blockquote>
+<div class="in-img">
+  <img src="https://images.unsplash.com/photo-1603048588665-791ca8aea617?auto=format&fit=crop&w=1200&q=90" alt="Chocolates embalagem premium confeitaria" onerror="this.style.display='none';this.parentNode.querySelector('.fb').style.display='flex'">
+  <div class="fb" style="background:linear-gradient(135deg,#3d1a08,#1e0d04)">🍫</div>
+</div>
+<p class="caption">Na confeitaria premium, a embalagem é parte do produto — e do argumento de preço</p>
+<div class="prod-box">
+  <div class="pb-label">🏷 Linha Premium — Alterpel</div>
+  <h4>Caixas com Visor para Doces, Bolos e Presentes</h4>
+  <div class="pb-img"><img src="https://cdn.awsli.com.br/300x300/671/671521/produto/172673479/whatsapp-image-2-c0dxk77gmh.jpeg" alt="Caixa visor Alterpel" onerror="this.style.display='none'"></div>
+  <p>Caixas com visor transparente para doces, bento cake e kits de presente. Apresentação premium que justifica preços mais altos e cria a experiência de unboxing que vira story do cliente.</p>
+  <a href="https://www.alterpel.com.br/embalagem-caixa-bolos" target="_blank">Ver linha confeitaria →</a>
+</div>`
+  },
+
+  /* 5 ── BENTO CAKE ─────────────────────────────────────────── */
+  {
+    id:'bentocake', cat:'confeitaria', catLabel:'Confeitaria', chip:'chip-o',
+    title:'Tendências de confeitaria: do bento cake ao unboxing que viraliza',
+    date:'15 abr. 2026', author:'Editoria de Confeitaria', read:'6 min',
+    excerpt:'Em 2026, a confeitaria que vende é a que equilibra técnica, sabor, estética e propósito. E a embalagem é onde esses quatro elementos se encontram antes mesmo do cliente provar o produto.',
+    img:'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=1200&q=90',
+    fb:'🎂', fbBg:'#5c2d0e',
+    thumb:'https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&fit=crop&w=300&q=80',
+    body:`
+<p>O setor de confeitaria artesanal chega a 2026 em um ponto de maturidade: as tendências que explodiram nos anos anteriores — bento cake, brigadeiros premium, bolos instagramáveis — estão consolidadas. Agora, o diferencial não é mais "ter" essas tendências, mas executá-las bem. E a execução começa na embalagem.</p>
+<p>Segundo levantamento da <strong>Loja Santo Antonio (mar/2026)</strong>, as principais tendências de confeitaria para 2026 apontam para: ingredientes premium, personalização, sustentabilidade e — diretamente ligado ao nosso tema — <strong>embalagens inteligentes</strong>: "caixas com visor transparente para doces instagramáveis, embalagens de papel kraft com pegada sustentável, fitas e etiquetas personalizáveis para aprimorar o unboxing do seu cliente".</p>
+<blockquote><p>"O plástico excessivo dá lugar a materiais biodegradáveis, papel kraft e designs que comunicam o compromisso ecológico da sua marca. Na confeitaria moderna, nós comemos primeiro com os olhos." — Blog Loja Santo Antonio, mar/2026</p></blockquote>
+<h3>Bento cake: o produto que vive da embalagem</h3>
+<p>O bento cake — bolo coreano individual de 10 a 12 cm — consolidou-se como um dos produtos mais vendidos da confeitaria artesanal brasileira em 2025-2026. Mas num produto cujo principal apelo é visual, a embalagem inadequada destrói o trabalho: flores de buttercream amassadas, decorações deslocadas, aparência de descuido — tudo resultado de uma caixa sem berço ou sem visor.</p>
+<div class="in-img">
+  <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&fit=crop&w=1200&q=90" alt="Bolo decorado confeitaria 2026" onerror="this.style.display='none';this.parentNode.querySelector('.fb').style.display='flex'">
+  <div class="fb" style="background:linear-gradient(135deg,#5c2d0e,#3d1a08)">🎂</div>
+</div>
+<p class="caption">Bolos decorados e bento cakes exigem caixa com berço que fixe o produto e preserve a decoração no transporte</p>
+<h3>O unboxing como estratégia de marketing</h3>
+<p>Pesquisas indicam que <strong>75% dos consumidores são mais propensos a comprar de marcas que oferecem produtos inovadores e personalizados</strong> (Doces Criativos, dez/2025). No delivery de confeitaria, o "produto inovador" frequentemente começa na embalagem: caixas com visor criam o momento de revelação que os clientes filmam e postam, gerando marketing orgânico gratuito. Confeiteiras relatam aumento de <strong>30 a 40% no ticket médio</strong> após trocar para embalagens premium.</p>
+<div class="prod-box">
+  <div class="pb-label">🏷 Produto Alterpel — Bento Cake</div>
+  <h4>Caixa com Visor e Berço para Bento Cake + Brigadeiros</h4>
+  <div class="pb-img"><img src="https://cdn.awsli.com.br/300x300/671/671521/produto/172673479/whatsapp-image-2-c0dxk77gmh.jpeg" alt="Caixa bento cake Alterpel" onerror="this.style.display='none'"></div>
+  <p>Caixa com visor frontal, espaço para bento cake e berço para brigadeiros. Perfeita para kits de presente. Pacote com 10 unidades. Frete grátis para SP.</p>
+  <a href="https://www.alterpel.com.br/kav960j2e-m7jn0smbt-sa-01-branca-cvisorberco-bebida-e-10-doces-pactc10-valor-unid-r-676" target="_blank">Ver caixa para bento cake →</a>
+</div>`
+  },
+
+  /* 6 ── E-COMMERCE 2026 ─────────────────────────────────────── */
+  {
+    id:'ecommerce', cat:'ecommerce', catLabel:'E-commerce', chip:'chip-b',
+    title:'City delivery, Keeta e a "taxa das blusinhas": como o e-commerce impacta as embalagens',
+    date:'10 abr. 2026', author:'Editoria Digital EmbalaBox', read:'6 min',
+    excerpt:'A entrada da Keeta no Brasil, a guerra dos fretes e a extinção da "taxa das blusinhas" em maio de 2026 redesenham o e-commerce nacional. Para as embalagens, mais volume e mais exigência.',
+    img:'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1200&q=90',
+    fb:'📲', fbBg:'#0d2860',
+    thumb:'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=300&q=80',
+    body:`
+<p>O e-commerce brasileiro de 2026 vive um momento de dupla movimentação: de um lado, a consolidação das plataformas de delivery com a entrada agressiva da <strong>Keeta (Meituan)</strong> e a disputa acirrada com o iFood; de outro, uma mudança regulatória significativa — em <strong>maio de 2026</strong>, o governo extinguiu a chamada <strong>"taxa das blusinhas"</strong>, zerando a alíquota federal de 20% sobre compras internacionais de até US$50. O resultado: mais volume de importações, mais competição para produtos nacionais e mais pressão sobre o food service local para se diferenciar pela experiência — incluindo a embalagem.</p>
+<h3>A Keeta e o novo padrão de city delivery</h3>
+<p>A Keeta/Meituan entrou no Brasil em 2025 com um modelo agressivo: tecnologia de rotas avançada, subsídios para restaurantes parceiros e promessas de entregas ultra-rápidas. Em 2026, consolida-se a <strong>nova fase das dark kitchens</strong>: modelos híbridos com múltiplas marcas sob a mesma operação, micro-hubs de preparo e cardápios criados com base em dados de IA. Para esse modelo funcionar, a embalagem precisa estar <strong>pronta para uso imediato</strong> — sem montagem, sem etapas desnecessárias.</p>
+<div class="in-img">
+  <img src="https://images.unsplash.com/photo-1609429019995-8c40f49535a5?auto=format&fit=crop&w=1200&q=90" alt="E-commerce city delivery 2026" onerror="this.style.display='none';this.parentNode.querySelector('.fb').style.display='flex'">
+  <div class="fb" style="background:linear-gradient(135deg,#0d2860,#071430)">📦</div>
+</div>
+<p class="caption">O city delivery de 2026 opera com modelos híbridos, IA e exigência de embalagens prontas para uso imediato</p>
+<h3>Varejo alimentar: R$ 1,4 trilhão e o papel do marketplace</h3>
+<p>O varejo alimentar brasileiro faturou <strong>R$ 1,4 trilhão</strong> em 2025 e projeta fôlego para 2026 (E-Commerce Brasil). No marketplace de food service, a diferença entre marcas concorrentes com preço e produto similares frequentemente está na experiência de entrega — na embalagem que preserva o alimento e na apresentação que surpreende. Pesquisas mostram que embalagens premium aumentam em até <strong>90% a disposição dos clientes de pedir outros produtos do mesmo vendedor</strong>.</p>
+<blockquote><p>"Em 2026, veremos mais negócios investindo em delivery de experiência, com embalagens térmicas inovadoras, apresentações cuidadas e cardápios pensados exclusivamente para viagem." — Skymsen, Tendências Food Service 2026</p></blockquote>
+<h3>QR code e embalagem inteligente: já é realidade</h3>
+<p>O mercado de etiquetas inteligentes (QR code, NFC) está avaliado em mais de <strong>US$ 12 bilhões globalmente</strong>. No food service, QR codes nas embalagens direcionam para cardápios digitais, programas de fidelidade e canais de WhatsApp — transformando a embalagem descartável num ponto de contato de marketing de alto valor.</p>
+<div class="prod-box">
+  <div class="pb-label">🏷 Para o seu e-commerce — Alterpel</div>
+  <h4>Caixa Kraft Multiuso — Pronta para Delivery e Marketplace</h4>
+  <div class="pb-img"><img src="https://cdn.awsli.com.br/300x300/671/671521/produto/213028121/site--6--pys62me6l9.png" alt="Caixa kraft delivery Alterpel" onerror="this.style.display='none'"></div>
+  <p>Caixas kraft para encomendas, delivery e marketplace. Montagem rápida. Vários tamanhos disponíveis. Frete grátis para SP diretamente da fábrica em Sorocaba.</p>
+  <a href="https://www.alterpel.com.br/buscar?q=kraft" target="_blank">Ver linha para e-commerce →</a>
+</div>`
+  },
+
+  /* 7 ── HAMBÚRGUER ─────────────────────────────────────────── */
+  {
+    id:'hamburguer', cat:'hamburguer', catLabel:'Hamburguerias', chip:'chip-r',
+    title:'Hamburguerias: o mercado cresce, a concorrência aperta e a embalagem faz diferença',
+    date:'5 abr. 2026', author:'Redação EmbalaBox', read:'5 min',
+    excerpt:'Com 84% das redes de franquia de alimentação crescendo em 2024 e a chegada da Keeta ao delivery, hamburguerias artesanais precisam de cada detalhe a favor. A embalagem certa é um deles.',
+    img:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=1200&q=90',
+    fb:'🍔', fbBg:'#7a1e1e',
+    thumb:'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=300&q=80',
+    body:`
+<p>O franchising de alimentação foi um dos setores mais sólidos de 2024: <strong>84% das redes registraram crescimento de faturamento</strong>, sendo que 41% avançaram mais de 10% no período, segundo a 14ª Pesquisa Anual Setorial de Foodservice da ABF (dez/2025). Em 2026, esse crescimento continua — mas a concorrência também. Com a entrada da Keeta, o retorno da 99Food e o iFood cada vez mais exigente em avaliações, hamburguerias artesanais precisam de cada detalhe a favor.</p>
+<div class="in-img">
+  <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=1200&q=90" alt="Hambúrguer artesanal premium 2026" onerror="this.style.display='none';this.parentNode.querySelector('.fb').style.display='flex'">
+  <div class="fb" style="background:linear-gradient(135deg,#7a1e1e,#4a1010)">🍔</div>
+</div>
+<p class="caption">O hambúrguer artesanal premium exige embalagem à altura — e que facilite a operação nos picos de sexta à noite</p>
+<h3>O custo invisível da montagem manual</h3>
+<p>Uma caixa plana precisa ser dobrada e encaixada antes de receber o produto — entre 8 e 15 segundos por unidade. Para 100 pedidos numa noite de sexta, são até <strong>25 minutos de trabalho manual</strong> que poderiam ser usados na preparação dos lanches. Caixas pré-montadas eliminam essa etapa. Parece pouco; na escala de uma hamburgueria com alto volume, é a diferença entre sair no horário ou atrasar pedidos no pico.</p>
+<blockquote><p>"A embalagem é o primeiro contato visual do cliente com o produto. Se a caixa chega amassada, o cliente começa a refeição desapontado — independente da qualidade do lanche."</p></blockquote>
+<div class="prod-box">
+  <div class="pb-label">🏷 Produto Alterpel — Hambúrguer</div>
+  <h4>Caixa para Hambúrguer 12×12×8,5 cm — 150 un. — Já Montada</h4>
+  <div class="pb-img"><img src="https://cdn.awsli.com.br/300x300/671/671521/produto/271511469/embalagem-hamburguer--4--fmu6ie3s6e.jpg" alt="Caixa hambúrguer montada Alterpel" onerror="this.style.display='none'"></div>
+  <p>Pacote com 150 unidades pré-montadas. Sem dobrar, sem encaixar. Também disponível 10×10×7 cm (200 un.). Frete grátis para SP.</p>
+  <a href="https://www.alterpel.com.br/embalagem-hamburguer" target="_blank">Ver caixas para hambúrguer →</a>
+</div>
+<h3>ESG nas hamburguerias: sustentabilidade vira requisito</h3>
+<p>A pesquisa da Galunion para a ABF (dez/2025) é categórica: <strong>71% dos consumidores priorizam marcas com práticas ambientais claras</strong>. Para hamburguerias, isso significa migrar do isopor para o papel, eliminar canudos de plástico e comunicar o compromisso ambiental na própria embalagem. Em 2026, hamburguerias que ainda usam isopor precisam ter consciência de que estão nadando contra a corrente do comportamento do consumidor.</p>`
+  },
+
+  /* 8 ── ORIENTAL 2026 ──────────────────────────────────────── */
+  {
+    id:'oriental', cat:'oriental', catLabel:'Sushi & Oriental', chip:'chip-b',
+    title:'Culinária oriental no delivery: sushi, yakisoba e a embalagem que preserva o produto',
+    date:'28 mar. 2026', author:'Redação EmbalaBox', read:'7 min',
+    excerpt:'Com a culinária brasileira dominando 38% dos pedidos no iFood no almoço, a japonesa e oriental competem no jantar. Guia prático de embalagem para cada prato.',
+    img:'https://images.pexels.com/photos/327172/pexels-photo-327172.jpeg?auto=compress&cs=tinysrgb&w=1260&dpr=1',
+    fb:'🍣', fbBg:'#0d2d4e',
+    thumb:'https://images.pexels.com/photos/327172/pexels-photo-327172.jpeg?auto=compress&cs=tinysrgb&w=400&dpr=1',
+    body:`
+<p>A culinária japonesa e oriental consolidou-se como uma das mais populares no delivery brasileiro. Segundo o iFood, a culinária brasileira domina o horário do almoço (38% dos pedidos), mas à noite e nos fins de semana a disputa é acirrada — e a culinária oriental está sempre entre os segmentos mais pedidos. Em 2026, com o mercado de delivery ultrapassando US$ 23 bilhões e a concorrência entre apps aquecida, a embalagem certa pode ser o fator que garante avaliação 5 estrelas ou gera reclamação.</p>
+<div style="width:100%;border-radius:5px;overflow:hidden;margin:22px 0 6px;line-height:0;">
+  <img src="https://images.pexels.com/photos/327172/pexels-photo-327172.jpeg?auto=compress&cs=tinysrgb&w=1260&dpr=1" alt="Sushi rolls culinária japonesa" style="width:100%;height:auto;display:block;border-radius:5px;" onerror="this.parentNode.style.background='#0d2d4e';this.parentNode.style.height='220px';">
+</div>
+<p class="caption">Sushi, temaki e combinados exigem embalagens que preservem a aparência, a temperatura e a integridade dos ingredientes</p>
+<h3>Sushi e combinados: a estética como prioridade</h3>
+<p>Para sushi, a embalagem é extensão da apresentação. <strong>Caixas brancas</strong> transmitem limpeza e tradição. <strong>Caixas pretas</strong> são o padrão estético premium — valorizam a apresentação dos rolls e transmitem sofisticação. O tamanho importa: combinados maiores precisam de caixas generosas para que os rolls não se toquem e a apresentação chegue intacta.</p>
+<div class="prod-box">
+  <div class="pb-label">🏷 Linha Oriental — Alterpel</div>
+  <h4>Caixas para Sushi Delivery — Branca e Preta</h4>
+  <div class="pb-img"><img src="https://cdn.awsli.com.br/300x300/671/671521/produto/59031532/c-pia-de-alterpel-png--3--4jvcs6d6jd.png" alt="Caixa sushi Alterpel" onerror="this.style.display='none'"></div>
+  <p>Linha completa em branco e preto para sushi, sashimi e combinados. De 14,5×14,5 cm até 29×23 cm. Laminação impermeável interna. Frete grátis para SP.</p>
+  <a href="https://www.alterpel.com.br/embalagens-culinaria-oriental-caixa-comida-japonesa-sushi-delivery" target="_blank">Ver linha oriental →</a>
+</div>
+<h3>Yakisoba: impermeabilização obrigatória</h3>
+<p>O molho shoyu destrói o papelão comum em menos de 20 minutos de entrega. A solução são <strong>boxes com revestimento interno impermeável</strong> — que mantêm a integridade mesmo em contato prolongado com caldos. Restaurantes que fazem essa troca relatam queda significativa nas reclamações sobre embalagem e melhora no rating dos apps.</p>
+<div style="width:100%;border-radius:5px;overflow:hidden;margin:22px 0 6px;line-height:0;">
+  <img src="https://images.pexels.com/photos/9210/pexels-photo-9210.jpeg?auto=compress&cs=tinysrgb&w=1260&dpr=1" alt="Culinária oriental japonesa" style="width:100%;height:auto;display:block;border-radius:5px;" onerror="this.parentNode.style.background='#0d2d4e';this.parentNode.style.height='220px';">
+</div>
+<p class="caption">A variedade da culinária oriental exige embalagens específicas para cada tipo de prato e molho</p>
+<div style="width:100%;display:flex;justify-content:center;margin:22px 0 6px;">
+  <img src="data:image/jpeg;base64,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" alt="Sushi em caixa delivery culinária oriental" style="max-height:420px;width:auto;max-width:100%;border-radius:5px;display:block;object-fit:contain;">
+</div>
+<p class="caption">Sushi em caixa delivery — a embalagem branca premium é o padrão estético do segmento japonês no Brasil</p>
+<h3>Temaki: preservar a crocância do nori</h3>
+<p>O temaki tem desafio específico: o nori (alga) perde crocância em contato com umidade. Cones de papel específicos para temaki — ou embalagens com estrutura que separa recheio úmido da alga — são a solução técnica para preservar a textura que faz do temaki um produto especial.</p>`
+  },
+
+  /* 9 ── SUSTENTABILIDADE 2026 ──────────────────────────────── */
+  {
+    id:'sustentabilidade', cat:'sustentabilidade', catLabel:'Sustentabilidade', chip:'chip-v',
+    title:'Sustentabilidade em embalagens: 71% dos consumidores cobram e o mercado cresce US$ 240 bi',
+    date:'20 mar. 2026', author:'Agência EmbalaBox', read:'5 min',
+    excerpt:'Em 2026, sustentabilidade em embalagens deixou de ser diferencial e virou requisito. 71% dos brasileiros priorizam marcas com práticas ambientais — e o mercado global de embalagens sustentáveis já passa dos US$ 130 bilhões.',
+    img:'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=1200&q=90',
+    fb:'🌿', fbBg:'#1e4a1a',
+    thumb:'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=300&q=80',
+    body:`
+<p>Em 2026, a sustentabilidade em embalagens deixou de ser pauta apenas "ética" para se tornar também "econômica". Pesquisa da <strong>Galunion para a ABF (dez/2025)</strong> aponta que <strong>71% dos consumidores brasileiros priorizam marcas com práticas ambientais claras</strong> — como embalagens biodegradáveis e redução de desperdício. Ignorar isso em 2026 não é só uma questão de posicionamento: é deixar 7 em cada 10 consumidores mais propensos a escolher o concorrente.</p>
+<p>O mercado global de embalagens sustentáveis projeta crescimento de <strong>US$ 126,50 bilhões (2025) para US$ 240,52 bilhões até 2034</strong> (Precedence Research) — mais que dobrar em uma década. No Brasil, o food service é o principal vetor dessa demanda, puxado pelo crescimento do delivery e pela pressão regulatória crescente sobre o uso de plástico.</p>
+<blockquote><p>"A sustentabilidade em 2026 deixou de ser uma pauta apenas ética para se tornar econômica. O consumidor moderno observa o tipo de embalagem, o impacto ambiental e, principalmente, o desperdício." — Digi Office, jan/2026</p></blockquote>
+<div class="in-img">
+  <img src="https://images.unsplash.com/photo-1604187351574-c75ca79f5807?auto=format&fit=crop&w=1200&q=90" alt="Embalagens sustentáveis food service 2026" onerror="this.style.display='none';this.parentNode.querySelector('.fb').style.display='flex'">
+  <div class="fb" style="background:linear-gradient(135deg,#1e4a1a,#0f2b0d)">🌱</div>
+</div>
+<p class="caption">A nova geração de embalagens de papel une impermeabilidade, sustentabilidade e reciclabilidade</p>
+<h3>Tarifas Trump: efeito colateral que beneficia o papel nacional</h3>
+<p>A tarifa de 50% imposta pelo governo Trump sobre exportações brasileiras (ago/2025) gerou desvalorização cambial e encarecimento de insumos importados. Para a cadeia de embalagens, o efeito foi de alta nos custos de equipamentos e matérias-primas importadas — o que aumentou a vantagem competitiva das embalagens produzidas integralmente com matéria-prima brasileira, como o papel e o cartão kraft nacional.</p>
+<h3>Papel: 72% de reciclagem vs. 9% do plástico</h3>
+<p>Os números justificam a escolha: <strong>72% das embalagens de papel e papelão são recicladas</strong> em novos produtos. Em contraste, menos de 9% dos resíduos plásticos mundiais são reciclados. O papel é reciclado em média 3,5 vezes na Europa. No Brasil, a infraestrutura de reciclagem de papel está muito mais desenvolvida do que a de plástico — o que torna a embalagem de papel não apenas mais sustentável na teoria, mas na prática cotidiana do descarte brasileiro.</p>
+<div class="prod-box">
+  <div class="pb-label">🌿 Linha Sustentável — Alterpel</div>
+  <h4>Embalagens Kraft — Naturalmente Recicláveis</h4>
+  <div class="pb-img"><img src="https://cdn.awsli.com.br/300x300/671/671521/produto/213028121/site--6--pys62me6l9.png" alt="Embalagem kraft Alterpel" onerror="this.style.display='none'"></div>
+  <p>Caixas de papel kraft para food service: naturalmente reciclável, sem dependência de insumos importados, com laminação interna impermeável para contato direto com alimentos. Fábrica em Sorocaba-SP, frete grátis para SP.</p>
+  <a href="https://www.alterpel.com.br/buscar?q=kraft" target="_blank">Ver linha kraft sustentável →</a>
+</div>`
+  },
+
+  /* 10 ── MERCADO FOOD SERVICE 2026 ────────────────────────── */
+  {
+    id:'mercado2025', cat:'mercado', catLabel:'Mercado', chip:'chip-g',
+    title:'Food service: R$ 241 bi ficaram para trás — qual o tamanho do setor agora?',
+    date:'10 mar. 2026', author:'Agência EmbalaBox', read:'5 min',
+    excerpt:'O faturamento de R$ 241 bilhões foi alcançado em 2025. Em 2026, o setor cresce a 16,6% ao ano (Market Research Future), puxado por delivery, franchising e alimentação saudável. E as embalagens acompanham.',
+    img:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1200&q=90',
+    fb:'📊', fbBg:'#0f3d22',
+    thumb:'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=300&q=80',
+    body:`
+<p>O faturamento de <strong>R$ 241 bilhões do food service</strong>, projetado para 2025 pela Abrasel, foi confirmado — e o setor segue crescendo em 2026. O relatório da Market Research Future estima que o mercado de delivery no Brasil cresce a uma <strong>taxa anual de 16,6% entre 2021 e 2026</strong>. O setor gerou <strong>cerca de 162 mil novos postos de trabalho</strong> em 2025 (CNC) e responde por aproximadamente 2,5% do crescimento do PIB (ABIA).</p>
+<div class="in-img">
+  <img src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?auto=format&fit=crop&w=1200&q=90" alt="Restaurante food service Brasil 2026" onerror="this.style.display='none';this.parentNode.querySelector('.fb').style.display='flex'">
+  <div class="fb" style="background:linear-gradient(135deg,#0f3d22,#072015)">🍽️</div>
+</div>
+<p class="caption">Food service brasileiro em expansão — puxado por delivery, franchising e alimentação fora do lar</p>
+<h3>Franchising: 84% cresceram em 2024, e 2026 segue a tendência</h3>
+<p>A 14ª Pesquisa Anual Setorial de Foodservice da ABF (dez/2025) confirmou: <strong>84% das redes de franquias do setor de alimentação cresceram em 2024</strong>, com 41% avançando mais de 10%. Para 2026, a expectativa é de continuidade — impulsionada por automação, delivery próprio e foco em sustentabilidade.</p>
+<h3>O CMV das embalagens e a Reforma Tributária</h3>
+<p>O CMV (Custo de Mercadoria Vendida) ideal para o food service brasileiro gira entre 30% e 40% do faturamento líquido. As <strong>embalagens entram nesse cálculo</strong> como material de consumo imediato. Com a Reforma Tributária (IBS/CBS) em implementação gradual em 2026, operadores que compram embalagens de fabricantes formais com NF-e passarão a ter <strong>crédito tributário sobre esse custo</strong> — reduzindo o custo efetivo das embalagens para quem opera na formalidade.</p>
+<h3>Tendências que movem as embalagens em 2026</h3>
+<p>Os segmentos de maior crescimento em embalagens para food service em 2026 são: <strong>caixas com visor</strong> (confeitaria premium e bento cake), <strong>boxes impermeabilizados</strong> (yakisoba e massas delivery), <strong>kraft pré-montado</strong> (hamburguerias artesanais) e <strong>embalagens para marmitas fitness</strong> (reflexo do delivery saudável que o relatório da Hobart aponta como tendência consolidada de 2026).</p>
+<div class="prod-box">
+  <div class="pb-label">🏭 Alterpel — Sorocaba-SP</div>
+  <h4>Linha Completa para Food Service</h4>
+  <div class="pb-img"><img src="https://cdn.awsli.com.br/300x300/671/671521/produto/41165285/c-pia-de-alterpel--5--s0u52bm1gy.png" alt="Caixa bolo Alterpel" onerror="this.style.display='none'"></div>
+  <p>Mais de 25 anos fabricando embalagens para o mercado brasileiro. Linha completa para hamburguerias, culinária oriental, confeitaria, pizzas e delivery. Preços de fábrica, frete grátis para SP.</p>
+  <a href="https://www.alterpel.com.br" target="_blank">Visitar a loja Alterpel →</a>
+</div>`
+  },
+
+  /* 11 ── PIZZA ─────────────────────────────────────────────── */
+  {
+    id:'pizza', cat:'pizza', catLabel:'Pizzas', chip:'chip-o',
+    title:'Caixas de pizza: crescimento contínuo e o boom das pizzarias artesanais no delivery',
+    date:'1 mar. 2026', author:'Agência EmbalaBox', read:'4 min',
+    excerpt:'O segmento de pizzas segue sendo um dos mais fortes do delivery brasileiro. Em 2026, pizzarias artesanais apostam em embalagens diferenciadas como parte do posicionamento premium.',
+    img:'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=1200&q=90',
+    fb:'🍕', fbBg:'#6b2e00',
+    thumb:'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=300&q=80',
+    body:`
+<p>Pizza é o produto mais pedido no delivery brasileiro em volume absoluto. Em 2026, com o mercado de delivery ultrapassando US$ 23 bilhões, as caixas de pizza seguem sendo um dos itens de maior demanda no setor de embalagens — e as pizzarias artesanais que investem em embalagens diferenciadas conseguem cobrar mais e se posicionar no segmento premium.</p>
+<div class="in-img">
+  <img src="https://images.unsplash.com/photo-1571997478779-2adcbbe9ab2f?auto=format&fit=crop&w=1200&q=90" alt="Pizza artesanal embalagem delivery 2026" onerror="this.style.display='none';this.parentNode.querySelector('.fb').style.display='flex'">
+  <div class="fb" style="background:linear-gradient(135deg,#6b2e00,#3d1a00)">🍕</div>
+</div>
+<p class="caption">Pizzarias artesanais em 2026 usam embalagem como parte do posicionamento premium da marca</p>
+<h3>O que impulsiona o mercado de caixas de pizza</h3>
+<p><strong>1. Delivery em alta:</strong> Mais pedidos online exigem caixas que mantenham temperatura e crocância no transporte.<br>
+<strong>2. Pizzarias artesanais:</strong> Operações menores e alto valor agregado investem em embalagens kraft e premium.<br>
+<strong>3. Formatos diversificados:</strong> Baby pizzas, quadradas, meio a meio — cada formato cria demanda por embalagens específicas.<br>
+<strong>4. Sustentabilidade:</strong> Com 71% dos consumidores priorizando marcas ecológicas (ABF/Galunion), caixas de pizza kraft ganham espaço frente ao papelão comum.</p>
+<div class="prod-box">
+  <div class="pb-label">🏷 Produto Alterpel — Pizza</div>
+  <h4>Caixa de Pizza — Vários Tamanhos — 25 unidades</h4>
+  <div class="pb-img"><img src="https://cdn.awsli.com.br/300x300/671/671521/produto/271517159/design-sem-nome--1--ewwxww1x6k.png" alt="Caixa pizza Alterpel" onerror="this.style.display='none'"></div>
+  <p>Caixas de pizza do tamanho 25 cm ao 45 cm. Estrutura robusta que suporta o peso e mantém o calor. Pacotes com 25 unidades. Frete grátis para SP da fábrica.</p>
+  <a href="https://www.alterpel.com.br/caixa-de-pizza" target="_blank">Ver caixas de pizza →</a>
+</div>`
+  },
+
+  /* 12 ── BRIGADEIRO ────────────────────────────────────────── */
+  {
+    id:'brigadeiro', cat:'confeitaria', catLabel:'Confeitaria', chip:'chip-o',
+    title:'Embalagem de brigadeiro: o efeito unboxing que viraliza e multiplica o ticket médio',
+    date:'20 fev. 2026', author:'Editoria de Confeitaria', read:'5 min',
+    excerpt:'Em 2026, a confeitaria artesanal que cresce é a que domina o unboxing. 75% dos consumidores são mais propensos a comprar de marcas que oferecem experiências personalizadas — e a embalagem é onde essa experiência começa.',
+    img:'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=1200&q=90',
+    fb:'🍫', fbBg:'#3d1a08',
+    thumb:'https://images.unsplash.com/photo-1587049352846-4a222e784d38?auto=format&fit=crop&w=300&q=80',
+    body:`
+<p>Pesquisas indicam que <strong>75% dos consumidores são mais propensos a comprar de marcas que oferecem produtos inovadores e personalizados</strong> (Doces Criativos, dez/2025). Na confeitaria artesanal de 2026, "personalizado" começa na embalagem — na caixa que o cliente recebe antes de provar o brigadeiro.</p>
+<p>A dinâmica é simples: brigadeiros em sacolinha plástica são precificados de um jeito. Os mesmos brigadeiros em caixa com visor, berço individual e laço de cetim transmitem cuidado, atenção e valor — e o cliente paga mais sem questionar. Confeiteiras relatam <strong>aumento de 30 a 40% no ticket médio</strong> após migrar para embalagens com visor e berço.</p>
+<div class="in-img">
+  <img src="https://images.unsplash.com/photo-1621303837174-89787a7d4729?auto=format&fit=crop&w=1200&q=90" alt="Brigadeiros confeitaria premium 2026" onerror="this.style.display='none';this.parentNode.querySelector('.fb').style.display='flex'">
+  <div class="fb" style="background:linear-gradient(135deg,#3d1a08,#1e0d04)">🍫</div>
+</div>
+<p class="caption">Brigadeiros apresentados em caixa com berço e visor — apresentação premium que justifica preço mais alto</p>
+<blockquote><p>"Caixas com visores, laços de fita personalizados e potes charmosos podem transformar um simples doce em um presente perfeito." — Blog Loja Santo Antonio, set/2025</p></blockquote>
+<h3>Embalagem sustentável como tendência de 2026</h3>
+<p>Segundo a Mococa (fev/2026), as tendências globais de confeitaria para 2026 incluem: "embalagens recicláveis e minimalistas — o plástico excessivo dá lugar a materiais biodegradáveis, papel kraft e designs que comunicam o compromisso ecológico da marca". O cliente consciente de 2026 quer saber de onde vêm os ingredientes <em>e</em> o que acontece com a embalagem depois.</p>
+<div class="prod-box">
+  <div class="pb-label">🏷 Linha Confeitaria — Alterpel</div>
+  <h4>Caixas para Brigadeiros com Berço Suporte</h4>
+  <div class="pb-img"><img src="https://cdn.awsli.com.br/300x300/671/671521/produto/220881410/inserir-um-pouqu-0qio0girlt.png" alt="Caixa brigadeiro berço Alterpel" onerror="this.style.display='none'"></div>
+  <p>Caixas com berço para 12, 25 e até 100 brigadeiros. Linha completa em branco e kraft. Preços de fábrica em Sorocaba-SP. Frete grátis para SP.</p>
+  <a href="https://www.alterpel.com.br/embalagem-brigadeiro-caixa-doce" target="_blank">Ver linha para brigadeiros →</a>
+</div>`
+  }
+];
+
+/* ================================================================
+   SIDEBAR PRODUCTS
+   ================================================================ */
+const PRODUCTS = [
+  {n:'Caixa Hambúrguer Montada 12×12 — 150un',p:'R$ 166,50',img:'https://cdn.awsli.com.br/300x300/671/671521/produto/271511469/embalagem-hamburguer--4--fmu6ie3s6e.jpg',url:'https://www.alterpel.com.br/embalagem-hamburguer'},
+  {n:'Caixa Sushi Delivery — vários tamanhos',p:'A partir R$ 50,00',img:'https://cdn.awsli.com.br/300x300/671/671521/produto/59031532/c-pia-de-alterpel-png--3--4jvcs6d6jd.png',url:'https://www.alterpel.com.br/embalagens-culinaria-oriental-caixa-comida-japonesa-sushi-delivery'},
+  {n:'Box Massas Antivazamento — 50un',p:'R$ 98,00',img:'https://cdn.awsli.com.br/300x300/671/671521/produto/234084355/chef-robson-fgkd48sjwb.png',url:'https://www.alterpel.com.br/box-embalagem-para-macarrao-antivazamento-caixa-impermeavel-massas'},
+  {n:'Caixa Bolo 34×34 cm — 10un',p:'R$ 88,70',img:'https://cdn.awsli.com.br/300x300/671/671521/produto/41165285/c-pia-de-alterpel--5--s0u52bm1gy.png',url:'https://www.alterpel.com.br/embalagem-caixa-bolos'},
+  {n:'Caixa Brigadeiro com Berço — 10un',p:'R$ 54,90',img:'https://cdn.awsli.com.br/300x300/671/671521/produto/220881410/inserir-um-pouqu-0qio0girlt.png',url:'https://www.alterpel.com.br/embalagem-brigadeiro-caixa-doce'},
+  {n:'Caixa Kraft Multiuso 20×20 — 10un',p:'R$ 38,90',img:'https://cdn.awsli.com.br/300x300/671/671521/produto/213028121/site--6--pys62me6l9.png',url:'https://www.alterpel.com.br/caixa-kraft-embalagem-20x20'},
+  {n:'Caixa Pizza 35×35 — 25un',p:'R$ 89,75',img:'https://cdn.awsli.com.br/300x300/671/671521/produto/271517159/design-sem-nome--1--ewwxww1x6k.png',url:'https://www.alterpel.com.br/caixa-de-pizza'},
+  {n:'Bento Cake + Brigadeiros — 10un',p:'R$ 67,60',img:'https://cdn.awsli.com.br/300x300/671/671521/produto/172673479/whatsapp-image-2-c0dxk77gmh.jpeg',url:'https://www.alterpel.com.br/kav960j2e-m7jn0smbt-sa-01-branca-cvisorberco-bebida-e-10-doces-pactc10-valor-unid-r-676'},
+  {n:'Caixa Salgados 26×26×7 — 10un',p:'R$ 49,20',img:'https://cdn.awsli.com.br/300x300/671/671521/produto/41165274/site--3--bse6sdedau.png',url:'https://www.alterpel.com.br/caixa-embalagem-salgados'},
+];
+
+/* ================================================================
+   HELPERS
+   ================================================================ */
+function iT(src,alt,fbBg,fbE,style=''){
+  return `<img src="${src}" alt="${alt}" style="${style}" onerror="this.style.display='none';var f=this.parentNode.querySelector('.fb');if(f)f.style.display='flex';">
+          <div class="fb" style="display:none;background:${fbBg||'#333'}">${fbE||'📦'}</div>`;
+}
+
+/* ================================================================
+   HERO
+   ================================================================ */
+function renderHero(art){
+  const z=document.getElementById('hero-zone');
+  if(!art){z.innerHTML='';return;}
+  z.innerHTML=`<div style="background:var(--dark);">
+    <div class="hero-wrap">
+      <div class="hero-txt">
+        <span class="hero-pill">${art.catLabel}</span>
+        <h1 class="hero-h1">${art.title}</h1>
+        <p class="hero-lead">${art.excerpt}</p>
+        <button class="hero-cta" onclick="openArt('${art.id}')">Leia a reportagem completa</button>
+      </div>
+      <div class="hero-img">
+        ${iT(art.img,art.title,art.fbBg,art.fb,'width:100%;height:100%;object-fit:cover;opacity:.55')}
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ================================================================
+   SIDEBAR
+   ================================================================ */
+function renderSidebar(){
+  const tags=['Delivery','Sushi','Kraft','Bento Cake','Brigadeiro','Hambúrguer','Impermeável','Confeitaria','Pizza','Sustentabilidade','Yakisoba','Bolos','Regulamentação','E-commerce','Marketplace'];
+  document.getElementById('sidebar').innerHTML=`
+  <div class="alt-banner">
+    <div class="alt-logo-sb">Alter<span>pel</span></div>
+    <div class="alt-sub">Indústria de embalagens há mais de 25 anos. Fábrica em Sorocaba-SP.</div>
+    <div class="alt-badge">✅ Preço de fábrica · Frete grátis para SP</div>
+    <div class="alt-links">
+      <a href="https://www.alterpel.com.br/embalagens-culinaria-oriental-caixa-comida-japonesa-sushi-delivery" target="_blank">🍣 Culinária Oriental</a>
+      <a href="https://www.alterpel.com.br/embalagem-caixa-bolos" target="_blank">🎂 Bolos &amp; Confeitaria</a>
+      <a href="https://www.alterpel.com.br/embalagens-para-hamburgueria-delivery" target="_blank">🍔 Hamburguerias</a>
+      <a href="https://www.alterpel.com.br/caixa-embalagem-doces-confeitaria-brigadeiro" target="_blank">🍬 Doces &amp; Brigadeiros</a>
+      <a href="https://www.alterpel.com.br/caixa-de-pizza" target="_blank">🍕 Caixas de Pizza</a>
+    </div>
+    <div class="alt-tel">📱 <a href="https://wa.me/5515998100075" target="_blank">(15) 99810-0075 WhatsApp</a></div>
+  </div>
+
+  <div class="sb-w">
+    <div class="sb-head">Mais Lidos</div>
+    <div class="sb-body">
+      ${DB.slice(0,9).map(a=>`
+      <div class="sb-rec" onclick="openArt('${a.id}')">
+        <div class="sb-rec-img">${iT(a.thumb,a.title,a.fbBg,a.fb)}</div>
+        <div>
+          <div class="sb-rec-ttl">${a.title}</div>
+          <div class="sb-rec-dt">${a.date} · ${a.read}</div>
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>
+
+  <div class="sb-w">
+    <div class="sb-head">📊 Números do Setor — 2025</div>
+    <div class="sb-body" style="display:flex;flex-direction:column;gap:10px;">
+      <div style="background:var(--gf);border-radius:4px;padding:12px 14px;border-left:3px solid var(--g);">
+        <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--g);line-height:1">R$ 241 bi</div>
+        <div style="font-size:11px;color:#666;margin-top:3px;">Projeção do food service no Brasil em 2025 <span style="color:#aaa">(Abrasel)</span></div>
+      </div>
+      <div style="background:#eaf1fb;border-radius:4px;padding:12px 14px;border-left:3px solid #1a5fa5;">
+        <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:#1a5fa5;line-height:1">US$ 21 bi</div>
+        <div style="font-size:11px;color:#666;margin-top:3px;">Mercado de delivery de comida no Brasil <span style="color:#aaa">(Statista)</span></div>
+      </div>
+      <div style="background:#fff5e8;border-radius:4px;padding:12px 14px;border-left:3px solid #b05a00;">
+        <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:#b05a00;line-height:1">R$ 37,8 bi</div>
+        <div style="font-size:11px;color:#666;margin-top:3px;">Faturamento do setor de embalagens em 2024 <span style="color:#aaa">(ABIEF)</span></div>
+      </div>
+      <div style="background:#f3eeff;border-radius:4px;padding:12px 14px;border-left:3px solid #6a35c0;">
+        <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:#6a35c0;line-height:1">US$ 240 bi</div>
+        <div style="font-size:11px;color:#666;margin-top:3px;">Mercado global de embalagens sustentáveis até 2034 <span style="color:#aaa">(Precedence)</span></div>
+      </div>
+      <div style="background:var(--lgray);border-radius:4px;padding:12px 14px;border-left:3px solid #888;">
+        <div style="font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--dark);line-height:1">90,4 M</div>
+        <div style="font-size:11px;color:#666;margin-top:3px;">Brasileiros usando delivery de comida até 2029 <span style="color:#aaa">(Statista)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sb-w">
+    <div class="sb-head">Produtos — Alterpel</div>
+    <div class="sb-body">
+      ${PRODUCTS.map(p=>`
+      <div class="sb-prod">
+        <div class="sb-prod-img"><img src="${p.img}" alt="${p.n}" onerror="this.style.display='none'"></div>
+        <div>
+          <div class="sb-prod-name">${p.n}</div>
+          <div class="sb-prod-price">${p.p}</div>
+          <a href="${p.url}" target="_blank">Ver produto →</a>
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>
+
+  <div class="sb-w">
+    <div class="sb-head">Tópicos</div>
+    <div class="sb-body"><div class="tags-wrap">
+      ${tags.map(t=>`<button class="tag" onclick="filterCat('${t.toLowerCase().replace(/\s/g,'').replace(/ã/g,'a').replace(/ç/g,'c').replace(/ê/g,'e')}',null)">${t}</button>`).join('')}
+    </div></div>
+  </div>
+
+  <div class="sb-w">
+    <div class="sb-head">Sobre o Portal</div>
+    <div class="sb-body" style="font-size:13px;color:var(--txt);line-height:1.7">
+      <p><strong>EmbalaBox</strong> é portal editorial especializado em embalagens para food service, confeitaria e delivery no Brasil.</p><br>
+      <p>Parceria comercial com a <a href="https://www.alterpel.com.br" target="_blank" style="color:var(--g);font-weight:600">Alterpel — Indústria de Embalagens</a> · Sorocaba-SP · +25 anos no mercado.</p>
+    </div>
+  </div>`;
+}
+
+/* ================================================================
+   HOME
+   ================================================================ */
+function renderHome(filter){
+  window.scrollTo({top:0,behavior:'smooth'});
+  const list=(filter&&filter!=='todos')?DB.filter(a=>a.cat===filter):DB;
+  const show=list.length?list:DB;
+  const [hero,...rest]=show;
+  renderHero(hero);
+  renderSidebar();
+  const label=filter&&filter!=='todos'?`📁 ${filter.charAt(0).toUpperCase()+filter.slice(1)}`:'📰 Últimas Notícias';
+  document.getElementById('main').innerHTML=`
+    <div class="sec-ttl">${label}</div>
+    <div class="big-card">
+      <div class="thumb" onclick="openArt('${hero.id}')">
+        ${iT(hero.img,hero.title,hero.fbBg,hero.fb,'width:100%;height:100%;object-fit:cover')}
+      </div>
+      <span class="chip ${hero.chip}">${hero.catLabel}</span>
+      <h2 onclick="openArt('${hero.id}')">${hero.title}</h2>
+      <div class="meta"><span class="by">${hero.author}</span><span>•</span><span>${hero.date}</span><span>•</span><span>${hero.read} leitura</span></div>
+      <p class="excerpt">${hero.excerpt}</p>
+      <button class="read-more" onclick="openArt('${hero.id}')">Leia mais</button>
+    </div>
+    ${rest.length>=2?`<div class="grid2">${rest.slice(0,4).map(a=>`
+      <div class="med-card" onclick="openArt('${a.id}')">
+        <div class="thumb">${iT(a.img,a.title,a.fbBg,a.fb,'width:100%;height:100%;object-fit:cover')}</div>
+        <div class="bd">
+          <span class="chip ${a.chip}">${a.catLabel}</span>
+          <h3>${a.title}</h3>
+          <p>${a.excerpt.substring(0,100)}…</p>
+          <div class="meta">${a.author} · ${a.date}</div>
+        </div>
+      </div>`).join('')}</div>`:''}
+    ${rest.length>4?`<div class="divider"></div><div class="sec-ttl">📄 Mais Artigos</div>
+    <div class="hz-list">${rest.slice(4).map(a=>`
+      <div class="hz-item" onclick="openArt('${a.id}')">
+        <div class="thumb">${iT(a.img,a.title,a.fbBg,a.fb,'width:100%;height:100%;object-fit:cover')}</div>
+        <div class="inf">
+          <span class="chip ${a.chip}">${a.catLabel}</span>
+          <h3>${a.title}</h3>
+          <p>${a.excerpt.substring(0,90)}…</p>
+          <div class="meta">${a.author} · ${a.date}</div>
+        </div>
+      </div>`).join('')}</div>`:''}`;
+}
+
+/* ================================================================
+   ARTIGO INDIVIDUAL
+   ================================================================ */
+function openArt(id){
+  const art=DB.find(a=>a.id===id);
+  if(!art)return;
+  window.scrollTo({top:0,behavior:'smooth'});
+  document.getElementById('hero-zone').innerHTML='';
+  renderSidebar();
+  const rel=DB.filter(a=>a.id!==id).slice(0,4);
+  document.getElementById('main').innerHTML=`
+    <button class="back-btn" onclick="goHome()">Voltar para todas as notícias</button>
+    <article>
+      <div class="art-cover">${iT(art.img,art.title,art.fbBg,art.fb,'width:100%;height:100%;object-fit:cover')}</div>
+      <span class="chip ${art.chip}">${art.catLabel}</span>
+      <h1 class="art-h1" style="margin-top:10px">${art.title}</h1>
+      <div class="meta" style="margin-bottom:22px"><span class="by">${art.author}</span><span>•</span><span>${art.date}</span><span>•</span><span>${art.read} de leitura</span></div>
+      <div class="art-body">${art.body}</div>
+    </article>
+    <div class="divider"></div>
+    <div class="sec-ttl">📌 Leia também</div>
+    <div class="hz-list">${rel.map(a=>`
+      <div class="hz-item" onclick="openArt('${a.id}')">
+        <div class="thumb">${iT(a.img,a.title,a.fbBg,a.fb,'width:100%;height:100%;object-fit:cover')}</div>
+        <div class="inf">
+          <span class="chip ${a.chip}">${a.catLabel}</span>
+          <h3>${a.title}</h3>
+          <p>${a.excerpt.substring(0,90)}…</p>
+          <div class="meta">${a.author} · ${a.date}</div>
+        </div>
+      </div>`).join('')}</div>`;
+}
+
+/* ================================================================
+   NAVIGATION
+   ================================================================ */
+function filterCat(cat,btn){
+  document.querySelectorAll('#catbar .cat').forEach(b=>b.classList.remove('on'));
+  if(btn){btn.classList.add('on');}
+  else{const m=document.querySelector(`#catbar .cat[data-cat="${cat}"]`);
+    if(m)m.classList.add('on');else document.querySelector('#catbar .cat[data-cat="todos"]').classList.add('on');}
+  renderHome(cat);
+}
+function goHome(){
+  document.querySelectorAll('#catbar .cat').forEach((b,i)=>b.classList.toggle('on',i===0));
+  renderHome('todos');
+}
+
+/* ================================================================
+   SEARCH
+   ================================================================ */
+function doSearch(q){
+  const box=document.getElementById('searchResults');
+  const term=q.trim().toLowerCase();
+  if(!term){box.classList.remove('show');box.innerHTML='';return;}
+  const hits=DB.filter(a=>
+    a.title.toLowerCase().includes(term)||
+    a.excerpt.toLowerCase().includes(term)||
+    a.catLabel.toLowerCase().includes(term)
+  );
+  if(!hits.length){
+    box.innerHTML=`<div class="search-empty">Nenhum resultado para "<strong>${q}</strong>"</div>`;
+  } else {
+    box.innerHTML=hits.map(a=>`
+      <div class="search-item" onclick="document.getElementById('searchInput').value='';document.getElementById('searchResults').classList.remove('show');openArt('${a.id}')">
+        <img src="${a.thumb}" alt="${a.title}" onerror="this.style.display='none'" style="width:52px;height:52px;border-radius:3px;object-fit:cover;flex-shrink:0;">
+        <div>
+          <div class="search-item-cat">${a.catLabel}</div>
+          <div class="search-item-ttl">${a.title}</div>
+        </div>
+      </div>`).join('');
+  }
+  box.classList.add('show');
+}
+
+renderHome('todos');
+</script>
+</body>
+</html>
